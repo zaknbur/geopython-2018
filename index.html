@@ -9,7 +9,7 @@
 		<meta name="author" content="Dr John A Stevenson">
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/theme/moon.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -24,7 +24,7 @@
 		</script>
 	</head>
 	<body>
-	// Start presentation -------------------------------------------------
+
 
 <div class="reveal">
 	<div class="slides">
@@ -32,7 +32,7 @@
 		<p>Volcanic eruption mass calculations using Python, GRASS 7 and Pandas</p>
 
 		<p>
-		<small><a href="https://twitter.com/volcan01010">Dr John A Stevenson</a> / <a href="https://twitter.com/volcan01010">@volcan01010</a><br>
+		<small><a href="mailto:jostev@bgs.ac.uk">Dr John A Stevenson</a> / <a href="https://twitter.com/volcan01010">@volcan01010</a><br>
 			British Geological Survey</small>
 		</p>
                         <a href="http://www.bgs.ac.uk"><img src="./images/bgs_logo.png" width=128 style="background:none; border:none; box-shadow:none;"></a>
@@ -41,91 +41,76 @@
 	<section>
 	  <section data-markdown>
               <script type="text/template">
-              # How big was the eruption?
+              ## How big was the eruption?
               </script>
           </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Deposits picture
-              </script>
+	  <section>
+              <img class="stretch" src="./images/deposits.jpg">
           </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## One site and log
-              </script>
+	  <section>
+              <img class="stretch" src="./images/tephra_pit_notebook.jpg">
           </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Many sites and logs
-              </script>
+	  <section>
+              <img class="stretch" src="./images/pits.jpg">
           </section>
         </section>
 
         <section>
 	  <section data-markdown>
               <script type="text/template">
-              # From notebook to database
+              ## From notebook to database and plots
+              ```
+import csv
+import sqlite3
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pyproj
+import pyspatialite.dbapi2 as db
+```
               </script>
           </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Create CSV files
-              </script>
+	  <section>
+              Store field and lab data in version-controlled text files
+              <img class="stretch" src="./images/text_files_and_git.png">
           </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## SQLite with Python
-              </script>
+	  <section>
+              Calculate statistics and plot graphs
+              <img class="stretch" src="./images/manipulate_and_plot.png">
           </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Load to SQLite
-              </script>
+	  <section>
+              Read into Spatialite
+              <img class="stretch" src="./images/sqlite.png">
           </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Access within QGIS etc (map)
-              </script>
+	  <section>
+              Access via GDAL/OGR in QGIS and GRASS
+              <img class="stretch" src="./images/qgis_H3_thickness_data_03.png">
           </section>
         </section>
 
 	<section>
 	  <section data-markdown>
               <script type="text/template">
-              # Areas represented by observations
+              ## From points to areas
+```
+import sqlite3
+import grass.script as gscript
+import pandas as pd
+```
               </script>
           </section>
 	  <section data-markdown>
               <script type="text/template">
-              ## Using Python in GRASS7
+              ### Using Python in GRASS7
               </script>
+          </section>
+	  <section>
+              ### Calculate Voronoi tesselation (and areas)
+              <img class="stretch" src="./images/qgis_H3A_voronoi_02.png">
           </section>
 	  <section data-markdown>
               <script type="text/template">
-              ## Calculate Voronoi tesselation (and areas)
-              </script>
-          </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Thickness variation across an area (map)
-              </script>
-          </section>
-	</section>
-
-	<section>
-	  <section data-markdown>
-              <script type="text/template">
-              # Calculating eruption size
-              </script>
-          </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Using Pandas with SQLite
-              </script>
-          </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Calculate total mass and volume
+              ### Thickness variation across an area (map)
               </script>
           </section>
 	</section>
@@ -133,40 +118,27 @@
 	<section>
 	  <section data-markdown>
               <script type="text/template">
-              # Alternative (manual) method
+              ## Calculating eruption statistics
+```
+import sqlite3
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+```
               </script>
           </section>
 	  <section data-markdown>
               <script type="text/template">
-              ## Use GRASS to interpolate between data points
+              ### Using Pandas with SQLite
+```
+with sqlite3.connect('my_database.sqlite') as conn:
+    df = pd.io.sql.read_sql('SELECT * FROM my_table'), conn)
+```
               </script>
           </section>
 	  <section data-markdown>
               <script type="text/template">
-              ## Digitise _'isopachs'_ by hand
-              </script>
-          </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Calculate volume with AshCalc
-              </script>
-          </section>
-	</section>
-
-	<section>
-	  <section data-markdown>
-              <script type="text/template">
-              # Comparison of methods
-              </script>
-          </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Advantages of Voronoi method
-              </script>
-          </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ## Advantages of isopach method
+              ### Calculate total mass and volume
               </script>
           </section>
 	</section>
@@ -174,7 +146,61 @@
 	<section>
 	  <section data-markdown>
               <script type="text/template">
-              # Thank you
+              ## Estimating volume with contours
+```
+import grass.script as gscript
+import pandas as pd
+```
+              </script>
+          </section>
+	  <section>
+              ### Use GRASS to interpolate between data points
+              <img class="stretch" src="./images/bsplines_H4.png">
+          </section>
+	  <section>
+              ### Digitise _'isopachs'_ by hand
+              <img class="stretch" src="./images/grass_digitise_isopachs.png">
+          </section>
+	  <section>
+              ### Calculate the area within each isopach
+              <img class="stretch" src="./images/H3_isopach_map.png">
+          </section>
+	  <section>
+              ### Calculate volume with AshCalc
+              <img class="stretch" src="./images/H3_PylePlot.png">
+	      <p><a href="https://github.com/MatthewDaggitt/AshCalc">https://github.com/MatthewDaggitt/AshCalc</a></p>
+          </section>
+	</section>
+
+	<section>
+          <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="iframes/voronoi_map/index.html" style="border: 1px solid black"></iframe>
+          <br/>
+          <small><a href="iframes/voronoi_map/index.html">View Larger Map</a></small>
+	</section>
+
+	<section data-markdown>
+                <script type="text/template">
+                ## Comparison of methods
+
+                |Voronoi         | Contours       |
+                |:---------------|:---------------|
+                |Objective       |Expert guidance |
+                |Repeatable      |Prettier results|
+                |Easily updated  ||
+                |Extends to TGSD ||
+
+                **Both use FOSS GIS tools**
+                </script>
+	</section>
+
+	<section>
+	  <section data-markdown>
+              <script type="text/template">
+              ## Thank you
+
+              + twitter: [@volcan01010](https://twitter.com/volcan01010)
+              + email: [jostev@bgs.ac.uk](mailto:jostev@bgs.ac.uk)
+              + blog: [http://all-geo.org/volcan01010/](http://all-geo.org/volcan01010/)
               </script>
           </section>
 	</section>
