@@ -42,21 +42,35 @@
             highlightLayer.openPopup();
         }
         var map = L.map('map', {
-            zoomControl:true, maxZoom:11, minZoom:4
+            zoomControl:true, maxZoom:11, minZoom:5
         })
         var hash = new L.Hash(map);
         map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
-        var basemap0 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-            maxZoom: 17
-        });
-        basemap0.addTo(map);
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
             if (bounds_group.getLayers().length) {
                 map.fitBounds(bounds_group.getBounds());
             }
-            map.setMaxBounds(map.getBounds());
+        }
+        function pop_natural_earth_icelandjsonnatural_earth_iceland_0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID'] !== null ? Autolinker.link(String(feature.properties['FID'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
         function style_natural_earth_icelandjsonnatural_earth_iceland_0_0() {
@@ -77,6 +91,7 @@
         var layer_natural_earth_icelandjsonnatural_earth_iceland_0 = new L.geoJson(json_natural_earth_icelandjsonnatural_earth_iceland_0, {
             attribution: '<a href=""></a>',
             pane: 'pane_natural_earth_icelandjsonnatural_earth_iceland_0',
+            onEachFeature: pop_natural_earth_icelandjsonnatural_earth_iceland_0,
             style: style_natural_earth_icelandjsonnatural_earth_iceland_0_0,
         });
         bounds_group.addLayer(layer_natural_earth_icelandjsonnatural_earth_iceland_0);
@@ -457,12 +472,35 @@
         });
         bounds_group.addLayer(layer_points_h3a_2);
         map.addLayer(layer_points_h3a_2);
+        function pop_hekla_location_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ogc_fid'] !== null ? Autolinker.link(String(feature.properties['ogc_fid'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['cat'] !== null ? Autolinker.link(String(feature.properties['cat'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
 
         function style_hekla_location_3_0() {
             return {
                 pane: 'pane_hekla_location_3',
                 shape: 'triangle',
-                radius: 8.000000000000004,
+                radius: 8.0,
                 opacity: 1,
                 color: 'rgba(0,0,0,1.0)',
                 dashArray: '',
@@ -480,6 +518,7 @@
         var layer_hekla_location_3 = new L.geoJson(json_hekla_location_3, {
             attribution: '<a href=""></a>',
             pane: 'pane_hekla_location_3',
+            onEachFeature: pop_hekla_location_3,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
@@ -488,10 +527,9 @@
                 return L.shapeMarker(latlng, style_hekla_location_3_0(feature));
             },
         });
-        map.addLayer(layer_hekla_location_3);
         bounds_group.addLayer(layer_hekla_location_3);
         map.addLayer(layer_hekla_location_3);
-        map.setView(new L.LatLng(64, -19.7), 7);
+        setBounds();
         </script>
     </body>
 </html>

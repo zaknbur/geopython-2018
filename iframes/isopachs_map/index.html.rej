@@ -1,0 +1,21 @@
+*** /dev/null
+--- /dev/null
+***************
+*** 44
+-             zoomControl:true, maxZoom:11, minZoom:4
+--- 44 -----
++             zoomControl:true, maxZoom:11, minZoom:5
+***************
+*** 48,52
+-         var basemap0 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
+-             attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+-             maxZoom: 17
+-         });
+-         basemap0.addTo(map);
+--- 0 -----
+***************
+*** 354
+- 	map.setView(new L.LatLng(64, -19.7), 7);
+--- 392,393 -----
++         map.addLayer(layer_hekla_location_2);
++         setBounds();

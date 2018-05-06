@@ -1,0 +1,38 @@
+*** /dev/null
+--- /dev/null
+***************
+*** 278,300
+-         function pop_hekla_location_2(feature, layer) {
+-             layer.on({
+-                 mouseout: function(e) {
+-                     if (typeof layer.closePopup == 'function') {
+-                         layer.closePopup();
+-                     } else {
+-                         layer.eachLayer(function(feature){
+-                             feature.closePopup()
+-                         });
+-                     }
+-                 },
+-                 mouseover: highlightFeature,
+-             });
+-             var popupContent = '<table>\
+-                     <tr>\
+-                         <td colspan="2">' + (feature.properties['ogc_fid'] !== null ? Autolinker.link(String(feature.properties['ogc_fid'])) : '') + '</td>\
+-                     </tr>\
+-                     <tr>\
+-                         <td colspan="2">' + (feature.properties['cat'] !== null ? Autolinker.link(String(feature.properties['cat'])) : '') + '</td>\
+-                     </tr>\
+-                 </table>';
+-             layer.bindPopup(popupContent, {maxHeight: 400});
+-         }
+--- 0 -----
+***************
+*** 324
+-             onEachFeature: pop_hekla_location_2,
+--- 0 -----
+***************
+*** 335,336
+-         map.addLayer(layer_hekla_location_2);
+-         setBounds();
+--- 297 -----
++ 	map.setView(new L.LatLng(64, -19.7), 7);
