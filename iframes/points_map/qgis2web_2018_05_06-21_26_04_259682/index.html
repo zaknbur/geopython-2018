@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/natural_earth_icelandjsonnatural_earth_iceland_0.js"></script>
+        <script src="data/points_h3a_1.js"></script>
+        <script src="data/hekla_location_2.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:11, minZoom:5
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        function pop_natural_earth_icelandjsonnatural_earth_iceland_0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID'] !== null ? Autolinker.link(String(feature.properties['FID'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_natural_earth_icelandjsonnatural_earth_iceland_0_0() {
+            return {
+                pane: 'pane_natural_earth_icelandjsonnatural_earth_iceland_0',
+                opacity: 1,
+                color: 'rgba(222,206,184,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+        }
+        map.createPane('pane_natural_earth_icelandjsonnatural_earth_iceland_0');
+        map.getPane('pane_natural_earth_icelandjsonnatural_earth_iceland_0').style.zIndex = 400;
+        map.getPane('pane_natural_earth_icelandjsonnatural_earth_iceland_0').style['mix-blend-mode'] = 'normal';
+        var layer_natural_earth_icelandjsonnatural_earth_iceland_0 = new L.geoJson(json_natural_earth_icelandjsonnatural_earth_iceland_0, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_natural_earth_icelandjsonnatural_earth_iceland_0',
+            onEachFeature: pop_natural_earth_icelandjsonnatural_earth_iceland_0,
+            style: style_natural_earth_icelandjsonnatural_earth_iceland_0_0,
+        });
+        bounds_group.addLayer(layer_natural_earth_icelandjsonnatural_earth_iceland_0);
+        map.addLayer(layer_natural_earth_icelandjsonnatural_earth_iceland_0);
+        function pop_points_h3a_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">locality</th>\
+                        <td>' + (feature.properties['locality'] !== null ? Autolinker.link(String(feature.properties['locality'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">thickness</th>\
+                        <td>' + (feature.properties['thickness'] !== null ? Autolinker.link(String(feature.properties['thickness'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_points_h3a_1_0(feature) {
+            if (feature.properties['thickness'] >= 0.000000 && feature.properties['thickness'] <= 1.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,251,255,1.0)',
+            }
+            }
+            if (feature.properties['thickness'] >= 1.000000 && feature.properties['thickness'] <= 2.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(226,238,249,1.0)',
+            }
+            }
+            if (feature.properties['thickness'] >= 2.000000 && feature.properties['thickness'] <= 5.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(205,224,242,1.0)',
+            }
+            }
+            if (feature.properties['thickness'] >= 5.000000 && feature.properties['thickness'] <= 10.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(176,210,232,1.0)',
+            }
+            }
+            if (feature.properties['thickness'] >= 10.000000 && feature.properties['thickness'] <= 20.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(137,191,221,1.0)',
+            }
+            }
+            if (feature.properties['thickness'] >= 20.000000 && feature.properties['thickness'] <= 50.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(96,166,210,1.0)',
+            }
+            }
+            if (feature.properties['thickness'] >= 50.000000 && feature.properties['thickness'] <= 100.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(62,142,196,1.0)',
+            }
+            }
+            if (feature.properties['thickness'] >= 100.000000 && feature.properties['thickness'] <= 200.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(33,114,182,1.0)',
+            }
+            }
+            if (feature.properties['thickness'] >= 200.000000 && feature.properties['thickness'] <= 500.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(10,84,158,1.0)',
+            }
+            }
+            if (feature.properties['thickness'] >= 500.000000 && feature.properties['thickness'] <= 210.000000 ) {
+                return {
+                pane: 'pane_points_h3a_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(8,48,107,1.0)',
+            }
+            }
+        }
+        map.createPane('pane_points_h3a_1');
+        map.getPane('pane_points_h3a_1').style.zIndex = 401;
+        map.getPane('pane_points_h3a_1').style['mix-blend-mode'] = 'normal';
+        var layer_points_h3a_1 = new L.geoJson(json_points_h3a_1, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_points_h3a_1',
+            onEachFeature: pop_points_h3a_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_points_h3a_1_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_points_h3a_1);
+        map.addLayer(layer_points_h3a_1);
+        function pop_hekla_location_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ogc_fid'] !== null ? Autolinker.link(String(feature.properties['ogc_fid'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['cat'] !== null ? Autolinker.link(String(feature.properties['cat'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_hekla_location_2_0() {
+            return {
+                pane: 'pane_hekla_location_2',
+                shape: 'triangle',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,26,28,1.0)',
+            }
+        }
+        map.createPane('pane_hekla_location_2');
+        map.getPane('pane_hekla_location_2').style.zIndex = 402;
+        map.getPane('pane_hekla_location_2').style['mix-blend-mode'] = 'normal';
+        var layer_hekla_location_2 = new L.geoJson(json_hekla_location_2, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_hekla_location_2',
+            onEachFeature: pop_hekla_location_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_hekla_location_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_hekla_location_2);
+        map.addLayer(layer_hekla_location_2);
+        setBounds();
+        </script>
+    </body>
+</html>
