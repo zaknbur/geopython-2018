@@ -39,6 +39,12 @@
 	</section>
 
 	<section>
+	  <section>
+		  <img class="stretch", src="./images/hekla_portrait.jpg">
+          </section>
+        </section>
+
+	<section>
 	  <section data-markdown>
               <script type="text/template">
               ## How big was the eruption?
@@ -78,14 +84,30 @@ import pyspatialite.dbapi2 as db
               Calculate statistics and plot graphs
               <img class="stretch" src="./images/manipulate_and_plot.png">
           </section>
+	  <section data-markdown>
+              <script type="text/template">
+              ## About Spatialite
+
+              + Single-file database based on SQLite
+              + Stores multiple layers + styles
+              + Includes spatial functions:
+                - `GeomFromText`
+                - `ST_Area`
+                - `ST_Difference`
+                - `ST_Transform`
+              </script>
+	  </section>
 	  <section>
               Read into Spatialite
               <img class="stretch" src="./images/sqlite.png">
           </section>
-	  <section>
-              Access via GDAL/OGR in QGIS and GRASS
-              <img class="stretch" src="./images/qgis_H3_thickness_data_03.png">
+ 	  <section>
+              <small>Read into GIS tools via GDAL/OGR</small>
+              <iframe class="stretch" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="iframes/points_map/index.html" style="border: 1px solid black"></iframe>
+              <br/>
+	      <small>Map via <a href="https://github.com/tomchadwin/qgis2web">QGIS2Web</a> - <a href="iframes/points_map/index.html">View Larger Map</a></small>
           </section>
+
         </section>
 
 	<section>
@@ -101,18 +123,34 @@ import pandas as pd
           </section>
 	  <section data-markdown>
               <script type="text/template">
-              ### Using Python in GRASS7
+              ### Using Python in GRASS 7
+
+              In GRASS 7:
+```bash
+r.info map=elevation -g
+```
+becomes [GRASS script](http://grass.osgeo.org/grass74/manuals/libpython/script_intro.html)
+```python
+gscript.read_command('r.info', map='elevation', flags='g')
+```
+
+              See [pygrass](https://grasswiki.osgeo.org/wiki/Python/pygrass) for direct API calls
               </script>
-          </section>
-	  <section>
-              ### Calculate Voronoi tesselation (and areas)
-              <img class="stretch" src="./images/qgis_H3A_voronoi_02.png">
           </section>
 	  <section data-markdown>
               <script type="text/template">
-              ### Thickness variation across an area (map)
+              ### Calculate Voronoi tesselation (and areas)
+```python
+gscript.run_command('v.voronoi', input='thickness_points',
+                    output='thickness_areas', overwrite=True)
+```
               </script>
           </section>
+	  <section>
+           <iframe class="stretch" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="iframes/voronoi_map/index.html" style="border: 1px solid black"></iframe>
+           <br/>
+           <small>Map via <a href="https://github.com/tomchadwin/qgis2web">QGIS2Web</a> - <a href="iframes/voronoi_map/index.html">View Larger Map</a></small>
+ 	  </section>
 	</section>
 
 	<section>
@@ -166,29 +204,16 @@ import pandas as pd
               <img class="stretch" src="./images/H3_isopach_map.png">
           </section>
 	  <section>
-              ### Calculate volume with AshCalc
-	      Get correct plot from web
-              <img class="stretch" src="./images/H3_PylePlot.png">
-	      <p><a href="https://github.com/MatthewDaggitt/AshCalc">https://github.com/MatthewDaggitt/AshCalc</a></p>
+              Calculate volume with AshCalc
+              <img class="stretch" src="./images/H3A_rootarea_thickness.png">
+	      <small><a href="https://github.com/MatthewDaggitt/AshCalc">https://github.com/MatthewDaggitt/AshCalc</a></small>
           </section>
-	</section>
-
-	<section>
-          <iframe class="stretch" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="iframes/points_map/index.html" style="border: 1px solid black"></iframe>
-          <br/>
-          <small><a href="iframes/points_map/index.html">View Larger Map</a></small>
-	</section>
-
-	<section>
-          <iframe class="stretch" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="iframes/voronoi_map/index.html" style="border: 1px solid black"></iframe>
-          <br/>
-          <small><a href="iframes/voronoi_map/index.html">View Larger Map</a></small>
 	</section>
 
 	<section>
           <iframe class="stretch" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="iframes/isopachs_map/index.html" style="border: 1px solid black"></iframe>
           <br/>
-          <small><a href="iframes/isopachs_map/index.html">View Larger Map</a></small>
+          <small>Map via <a href="https://github.com/tomchadwin/qgis2web">QGIS2Web</a> - <a href="iframes/isopachs_map/index.html">View Larger Map</a></small>
 	</section>
 
 	<section data-markdown>
@@ -197,6 +222,7 @@ import pandas as pd
 
                 |Voronoi         | Contours       |
                 |:---------------|:---------------|
+                |XX km3          |3.4 km3         |
                 |Objective       |Expert guidance |
                 |Repeatable      |Prettier results|
                 |Easily updated  ||
