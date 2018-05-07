@@ -96,10 +96,12 @@
             });
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['locality'] !== null ? Autolinker.link(String(feature.properties['locality'])) : '') + '</td>\
+                        <th scope="row">locality</th>\
+                        <td>' + (feature.properties['locality'] !== null ? Autolinker.link(String(feature.properties['locality'])) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['thickness'] !== null ? Autolinker.link(String(feature.properties['thickness'])) : '') + '</td>\
+                        <th scope="row">thickness</th>\
+                        <td>' + (feature.properties['thickness'] !== null ? Autolinker.link(String(feature.properties['thickness'])) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">area</th>\

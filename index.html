@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Reproducible geoscience: Volcanic eruption mass calculations using Python, GRASS7 and Pandas</title>
+		<title>Reproducible geoscience: Volcanic eruption volume calculations using Python, GRASS7 and Pandas</title>
 		<meta name="description" content="Presentation slides GeoPython 2018">
 		<meta name="author" content="Dr John A Stevenson">
 
@@ -29,7 +29,7 @@
 <div class="reveal">
 	<div class="slides">
 	<section>
-		<p>Volcanic eruption mass calculations using Python, GRASS 7 and Pandas</p>
+		<p>Volcanic eruption volume calculations using Python, GRASS 7 and Pandas</p>
 
 		<p>
 		<small><a href="mailto:jostev@bgs.ac.uk">Dr John A Stevenson</a> / <a href="https://twitter.com/volcan01010">@volcan01010</a><br>
@@ -47,16 +47,19 @@
 	<section>
 	  <section data-markdown>
               <script type="text/template">
-              ## How big was the eruption?
+              ## How big was the H3 eruption?
               </script>
           </section>
 	  <section>
+	      Find deposits
               <img class="stretch" src="./images/deposits.jpg">
           </section>
 	  <section>
+		  Measure thickness and more...<br>
               <img class="stretch" src="./images/tephra_pit_notebook.jpg">
           </section>
 	  <section>
+		  ...in many sites<br>
               <img class="stretch" src="./images/pits.jpg">
           </section>
         </section>
@@ -115,9 +118,7 @@ import pyspatialite.dbapi2 as db
               <script type="text/template">
               ## From points to areas
 ```
-import sqlite3
 import grass.script as gscript
-import pandas as pd
 ```
               </script>
           </section>
@@ -125,16 +126,16 @@ import pandas as pd
               <script type="text/template">
               ### Using Python in GRASS 7
 
-              In GRASS 7:
+With [GRASS script](http://grass.osgeo.org/grass74/manuals/libpython/script_intro.html),
 ```bash
 r.info map=elevation -g
 ```
-becomes [GRASS script](http://grass.osgeo.org/grass74/manuals/libpython/script_intro.html)
+becomes
 ```python
 gscript.read_command('r.info', map='elevation', flags='g')
 ```
 
-              See [pygrass](https://grasswiki.osgeo.org/wiki/Python/pygrass) for direct API calls
+<sub>See [pygrass](https://grasswiki.osgeo.org/wiki/Python/pygrass) for direct API calls</sub>
               </script>
           </section>
 	  <section data-markdown>
@@ -156,27 +157,43 @@ gscript.run_command('v.voronoi', input='thickness_points',
 	<section>
 	  <section data-markdown>
               <script type="text/template">
-              ## Calculating eruption statistics
+              ## Calculating eruption volume
 ```
 import sqlite3
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 ```
               </script>
           </section>
+	  <section data-markdown>
+              <script type="text/template">
+              ### Using Python standard library
+```python
+with sqlite3.connect('H3H4spatialdata.sqlite') as conn:
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    result = cur.execute("""
+        SELECT 1e-5 * SUM(thickness * area)
+        AS volume
+        FROM voronoi_h3a;""")
+
+print(result.fetchone()['volume'])
+```
+H3A volume: 2.4 km<sup>3</sup>
+              </script>
+          </section>
+
 	  <section data-markdown>
               <script type="text/template">
               ### Using Pandas with SQLite
+```python
+with sqlite3.connect('H3H4spatialdata.sqlite') as conn:
+    df = pd.io.sql.read_sql("""
+        SELECT locality, thickness, area
+        FROM df_h3a;""", conn)
+
+print(1e-5 * pd.np.sum(df['thickness'] * df['area']))
 ```
-with sqlite3.connect('my_database.sqlite') as conn:
-    df = pd.io.sql.read_sql('SELECT * FROM my_table'), conn)
-```
-              </script>
-          </section>
-	  <section data-markdown>
-              <script type="text/template">
-              ### Calculate total mass and volume
+H3A volume: 2.4 km<sup>3</sup>
               </script>
           </section>
 	</section>
@@ -187,33 +204,37 @@ with sqlite3.connect('my_database.sqlite') as conn:
               ## Estimating volume with contours
 ```
 import grass.script as gscript
-import pandas as pd
 ```
               </script>
           </section>
 	  <section>
-              ### Use GRASS to interpolate between data points
+              Use GRASS to interpolate between data points
               <img class="stretch" src="./images/bsplines_H4.png">
           </section>
+	  <section data-markdown>
+              <script type="text/template">
+```
+gscript.run_command(
+    'v.surf.bspline', ew_step=10000, ns_step=10000,
+    method='bilinear', lambda_i=0.05, column='thickness',
+    input='points_h3a', raster_output='bspline_h3a')
+```
+              </script>
+          </section>
 	  <section>
-              ### Digitise _'isopachs'_ by hand
+              Digitise _'isopachs'_ by hand
               <img class="stretch" src="./images/grass_digitise_isopachs.png">
           </section>
-	  <section>
-              ### Calculate the area within each isopach
-              <img class="stretch" src="./images/H3_isopach_map.png">
+          <section>
+             <iframe class="stretch" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="iframes/isopachs_map/index.html" style="border: 1px solid black"></iframe>
+             <br/>
+             <small>Map via <a href="https://github.com/tomchadwin/qgis2web">QGIS2Web</a> - <a href="iframes/isopachs_map/index.html">View Larger Map</a></small>
           </section>
 	  <section>
-              Calculate volume with AshCalc
+	      Calculate volume with <a href="https://github.com/MatthewDaggitt/AshCalc">AshCalc</a>
               <img class="stretch" src="./images/H3A_rootarea_thickness.png">
-	      <small><a href="https://github.com/MatthewDaggitt/AshCalc">https://github.com/MatthewDaggitt/AshCalc</a></small>
+	      <p>H3A volume: 3.8 km<sup>3</sup></p>
           </section>
-	</section>
-
-	<section>
-          <iframe class="stretch" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="iframes/isopachs_map/index.html" style="border: 1px solid black"></iframe>
-          <br/>
-          <small>Map via <a href="https://github.com/tomchadwin/qgis2web">QGIS2Web</a> - <a href="iframes/isopachs_map/index.html">View Larger Map</a></small>
 	</section>
 
 	<section data-markdown>
@@ -222,13 +243,13 @@ import pandas as pd
 
                 |Voronoi         | Contours       |
                 |:---------------|:---------------|
-                |XX km3          |3.4 km3         |
+		|2.4 km<sup>3</sup> |3.8 km<sup>3</sup>         |
                 |Objective       |Expert guidance |
                 |Repeatable      |Prettier results|
-                |Easily updated  ||
+                |Easily updated  |Extrapolates beyond data|
                 |Extends to TGSD ||
 
-                **Both use FOSS GIS tools**
+                **Both use Python + FOSS GIS tools**
                 </script>
 	</section>
 
@@ -237,8 +258,8 @@ import pandas as pd
               <script type="text/template">
               ## Thank you
 
-              + twitter: [@volcan01010](https://twitter.com/volcan01010)
               + email: [jostev@bgs.ac.uk](mailto:jostev@bgs.ac.uk)
+              + twitter: [@volcan01010](https://twitter.com/volcan01010)
               + blog: [http://all-geo.org/volcan01010/](http://all-geo.org/volcan01010/)
               </script>
           </section>
