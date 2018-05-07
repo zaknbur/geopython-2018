@@ -91,13 +91,13 @@ import pyspatialite.dbapi2 as db
               <script type="text/template">
               ## About Spatialite
 
-              + Single-file database based on SQLite
+              + Geospatial extension for SQLite
               + Stores multiple layers + styles
-              + Includes spatial functions:
+              + Includes PostGIS-like functions:
                 - `GeomFromText`
+                - `ST_Transform`
                 - `ST_Area`
                 - `ST_Difference`
-                - `ST_Transform`
               </script>
 	  </section>
 	  <section>
@@ -135,7 +135,7 @@ becomes
 gscript.read_command('r.info', map='elevation', flags='g')
 ```
 
-<sub>See [pygrass](https://grasswiki.osgeo.org/wiki/Python/pygrass) for direct API calls</sub>
+<sup>See [pygrass](https://grasswiki.osgeo.org/wiki/Python/pygrass) for direct API calls</sup>
               </script>
           </section>
 	  <section data-markdown>
@@ -144,6 +144,12 @@ gscript.read_command('r.info', map='elevation', flags='g')
 ```python
 gscript.run_command('v.voronoi', input='thickness_points',
                     output='thickness_areas', overwrite=True)
+gscript.run_command(
+        'v.db.addcolumn', map='thickness_areas',
+        columns='Area REAL')
+gscript.run_command(
+        'v.to.db', map='thickness_areas', option='area', 
+        columns='Area', units='kilometers')
 ```
               </script>
           </section>
@@ -178,7 +184,7 @@ with sqlite3.connect('H3H4spatialdata.sqlite') as conn:
 
 print(result.fetchone()['volume'])
 ```
-H3A volume: 2.4 km<sup>3</sup>
+H3A volume on land: 2.4 km<sup>3</sup>
               </script>
           </section>
 
@@ -193,7 +199,7 @@ with sqlite3.connect('H3H4spatialdata.sqlite') as conn:
 
 print(1e-5 * pd.np.sum(df['thickness'] * df['area']))
 ```
-H3A volume: 2.4 km<sup>3</sup>
+H3A volume on land: 2.4 km<sup>3</sup>
               </script>
           </section>
 	</section>
@@ -201,7 +207,7 @@ H3A volume: 2.4 km<sup>3</sup>
 	<section>
 	  <section data-markdown>
               <script type="text/template">
-              ## Estimating volume with contours
+              ## Estimating volume with isopachs
 ```
 import grass.script as gscript
 ```
@@ -222,7 +228,7 @@ gscript.run_command(
               </script>
           </section>
 	  <section>
-              Digitise _'isopachs'_ by hand
+              Digitise isopachs by hand
               <img class="stretch" src="./images/grass_digitise_isopachs.png">
           </section>
           <section>
@@ -243,10 +249,9 @@ gscript.run_command(
 
                 |Voronoi         | Contours       |
                 |:---------------|:---------------|
-		|2.4 km<sup>3</sup> |3.8 km<sup>3</sup>         |
                 |Objective       |Expert guidance |
                 |Repeatable      |Prettier results|
-                |Easily updated  |Extrapolates beyond data|
+                |Easily updated  ||
                 |Extends to TGSD ||
 
                 **Both use Python + FOSS GIS tools**
